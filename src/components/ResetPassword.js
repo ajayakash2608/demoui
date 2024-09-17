@@ -18,7 +18,7 @@ function ResetPassword() {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
       setMessage('Password reset successful');
       navigate('/');
     } catch (error) {
