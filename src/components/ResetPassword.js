@@ -1,102 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-function ResetPassword() {
+const ResetPassword = () => {
   const { token } = useParams();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    console.log('ResetPassword component mounted');
-    console.log('Token:', token);
+    // Optional: Validate token format or expiration
   }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
+      setError('Passwords do not match');
       return;
     }
 
-    setIsLoading(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
-      setMessage('Password reset successful');
-      navigate('/');
-    } catch (error) {
-      setMessage('Error resetting password');
-    } finally {
-      setIsLoading(false);
+      const response = await axios.post(`/reset-password/${token}`, { password });
+      setSuccess(response.data);
+    } catch (err) {
+      setError('Failed to reset password');
     }
   };
 
   return (
-    <div style={styles.container}>
+    <div>
       <h2>Reset Password</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+      <form onSubmit={handleSubmit}>
         <label>
           New Password:
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={styles.input}
             required
           />
         </label>
+        <br />
         <label>
           Confirm Password:
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={styles.input}
             required
           />
         </label>
-        <button type="submit" style={styles.button} disabled={isLoading}>
-          {isLoading ? 'Processing...' : 'Reset Password'}
-        </button>
+        <br />
+        <button type="submit">Reset Password</button>
       </form>
-      {message && <p style={styles.message}>{message}</p>}
     </div>
   );
-}
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    padding: '0 20px',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    maxWidth: '400px',
-    width: '100%',
-  },
-  input: {
-    margin: '10px 0',
-    padding: '10px',
-    fontSize: '16px',
-  },
-  button: {
-    padding: '10px',
-    fontSize: '16px',
-    cursor: 'pointer',
-  },
-  message: {
-    marginTop: '20px',
-    color: 'red',
-  },
 };
 
 export default ResetPassword;
