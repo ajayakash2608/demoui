@@ -1,76 +1,54 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import './pass.css'; 
-
-function ResetPassword() {
-  const { token } = useParams();
-  const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: '',
-  });
-
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+import './pass.css';
+const ResetPassword = () => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [token, setToken] = useState(new URLSearchParams(window.location.search).get('token'));
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match');
       return;
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, {
-        password: formData.password,
-      });
-      setSuccess('Password has been updated successfully');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      setMessage('Password updated successfully');
     } catch (err) {
-      setError(err.response?.data?.error || 'Error resetting password');
+      setMessage('Error updating password');
     }
   };
 
   return (
     <div className="reset-password-container">
-      <div className="reset-password-box">
-        <h2>Reset Password</h2>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-        <form onSubmit={handleSubmit}>
-          <label>
-            New Password
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <label>
-            Confirm Password
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <button type="submit">Reset Password</button>
-        </form>
-      </div>
+      <h2>Reset Password</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          New Password
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Confirm Password
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </label>
+        <button type="submit">Update Password</button>
+      </form>
+      {message && <p>{message}</p>}
     </div>
   );
-}
+};
 
 export default ResetPassword;
