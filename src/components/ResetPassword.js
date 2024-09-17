@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
-  const { token } = useParams(); // Get token from URL params
+  const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,14 +19,15 @@ const ResetPassword = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      console.log('Response:', response); // Debugging response
       setSuccess('Password has been updated successfully');
       setError('');
-      setTimeout(() => navigate('/'), 3000); // Redirect to login page after 3 seconds
+      setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
+      console.error('Error resetting password:', err.response || err); // More detailed logging
       setError('Error resetting password');
       setSuccess('');
-      console.error('Error resetting password:', err); // Log error details
     }
   };
 
