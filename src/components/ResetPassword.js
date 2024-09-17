@@ -30,6 +30,7 @@ const ResetPassword = () => {
     } catch (err) {
       setError('Error resetting password');
       setSuccess('');
+      console.error(err); // Log the error for debugging
     }
   };
 
