@@ -7,6 +7,7 @@ function ResetPassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,16 +18,17 @@ function ResetPassword() {
       return;
     }
 
+    setIsLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
       setMessage('Password reset successful');
       navigate('/');
     } catch (error) {
       setMessage('Error resetting password');
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  console.log('Rendering ResetPassword component'); // Debug log
 
   return (
     <div style={styles.container}>
@@ -52,7 +54,9 @@ function ResetPassword() {
             required
           />
         </label>
-        <button type="submit" style={styles.button}>Reset Password</button>
+        <button type="submit" style={styles.button} disabled={isLoading}>
+          {isLoading ? 'Processing...' : 'Reset Password'}
+        </button>
       </form>
       {message && <p style={styles.message}>{message}</p>}
     </div>
