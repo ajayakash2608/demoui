@@ -19,10 +19,10 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
       setSuccess('Password has been updated successfully');
       setError('');
-      setTimeout(() => navigate('/login'), 3000); // Redirect to login page after 3 seconds
+      setTimeout(() => navigate('/'), 3000); // Redirect to login page after 3 seconds
     } catch (err) {
       setError('Error resetting password');
       setSuccess('');
