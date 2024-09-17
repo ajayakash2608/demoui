@@ -26,6 +26,8 @@ function ResetPassword() {
     }
   };
 
+  console.log('Rendering ResetPassword component'); // Debug log
+
   return (
     <div style={styles.container}>
       <h2>Reset Password</h2>
