@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './pass.css';
+
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [token, setToken] = useState(new URLSearchParams(window.location.search).get('token'));
+  const [token] = useState(new URLSearchParams(window.location.search).get('token'));
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
