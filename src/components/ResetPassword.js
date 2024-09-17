@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,6 +9,11 @@ function ResetPassword() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('ResetPassword component mounted');
+    console.log('Token:', token);
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
