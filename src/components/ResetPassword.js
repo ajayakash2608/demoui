@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import './pass.css';
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/reset-password/${token}`, { password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}reset-password/${token}`, { password });
       console.log('Response:', response); // Debugging response
       setSuccess('Password has been updated successfully');
       setError('');
